@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আমার অটো নিউজ ল্যান্ডিং পেজ</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        .news-card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .news-image { max-width: 100%; height: auto; }
+    </style>
+</head>
+<body>
+    <h1>সর্বশেষ খবর</h1>
+    <div id="news-container">
+        <p>খবর লোড হচ্ছে...</p>
+    </div>
+
+    <script>
+        // News API থেকে ডেটা লোড করার ফাংশন
+        async function loadNews() {
+            try {
+                // ফ্রি News API - আপনার নিজের API key ব্যবহার করুন
+                const apiKey = 'your_api_key_here'; // NewsAPI.org থেকে নিন
+                const response = await fetch(`https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKey}`);
+                const data = await response.json();
+                
+                displayNews(data.articles);
+            } catch (error) {
+                document.getElementById('news-container').innerHTML = '<p>খবর লোড করতে সমস্যা হচ্ছে। পরে চেষ্টা করুন。</p>';
+            }
+        }
+
+        function displayNews(articles) {
+            const container = document.getElementById('news-container');
+            container.innerHTML = '';
+            
+            articles.forEach(article => {
+                const newsCard = `
+                    <div class="news-card">
+                        <h3>${article.title}</h3>
+                        <img class="news-image" src="${article.urlToImage || 'https://via.placeholder.com/400x200'}" alt="${article.title}">
+                        <p>${article.description || 'কোন বিবরণ নেই'}</p>
+                        <a href="${article.url}" target="_blank">সম্পূর্ণ খবর পড়ুন</a>
+                    </div>
+                `;
+                container.innerHTML += newsCard;
+            });
+        }
+
+        // পেজ লোড হলে খবর লোড করবে
+        document.addEventListener('DOMContentLoaded', loadNews);
+    </script>
+</body>
+</html>
